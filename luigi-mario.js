@@ -51,7 +51,7 @@ module.exports = {
 
 	Usage:
 
-	var luigi = require('luigi-mario');
+	var luigi = module.exports;//require('luigi-mario');
 	luigi.plumbing({
 		port: 10000,
 		http: {
@@ -71,4 +71,5 @@ module.exports = {
 			}
 		}
 	});
+	
 */
