@@ -2,19 +2,6 @@ module.exports = {
 	server: null,
 	port: null,
 	debug: null,
-	parseIos: function (ios) {
-		for (var io in ios) {
-			if (this.debug) {
-				console.log('socket://'+io+' -> '+ios[io]);
-			}
-			this.server.io.route(io,(function(server,f){
-				return function (q) {
-					q.io.broadcast = server.io.broadcast;
-					f(q);
-				}
-			}(this.server,ios[io])));
-		}
-	},
 	parsePosts: function (posts) {
 		for (var p in posts) {
 			if (this.debug) {
@@ -40,9 +27,6 @@ module.exports = {
 				this.parsePosts(routes.http.post);
 			}
 		}
-		if (routes.socket) {
-			this.parseIos(routes.socket);
-		}
 	},
 	plumbing: function (routes) {
 		if (routes.port) {
@@ -56,7 +40,7 @@ module.exports = {
 			this.debug = false;
 		}
 		this.server = require('express.io')();
-		this.server.http().io();
+		this.server.http();
 		this.server.listen(this.port);
 		this.parseRoutes(routes);
 		return this;
@@ -67,14 +51,11 @@ module.exports = {
 
 	Usage:
 
-	var luigi = require('luigi');
+	var luigi = require('luigi-mario');
 	luigi.plumbing({
 		port: 10000,
 		http: {
 			get: {
-				'/' : function (q,r) {
-					return r.send('<!doctype html><html><script src=\'socket.io/socket.io.js\'></script></html>');
-				},
 				'/echo' : function (q,r) {
 					return r.send({
 						echo : 'GET /echo'
@@ -87,14 +68,6 @@ module.exports = {
 						echo : 'POST /echo'
 					});
 				}
-			}
-		},
-		socket: {
-			'unicast:echo' : function (q) {
-				return q.io.emit('unicast:echo','unicast:echo');
-			},
-			'broadcast:echo' : function (q) {
-				return q.io.broadcast('broadcast:echo','broadcast:echo');
 			}
 		}
 	});
