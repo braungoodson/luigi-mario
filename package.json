@@ -2,7 +2,7 @@
   "name": "luigi-mario",
   "version": "0.0.1",
   "description": "Quick and easy class for defining your plumbing with express.io for HTTP.",
-  "main": "luigi.js",
+  "main": "luigi-mario.js",
   "dependencies": {
     "express.io": "~1.1.13"
   },
